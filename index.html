@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Room — Admin Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #21262d;
+  --bg4: #30363d;
+  --border: #30363d;
+  --border2: #21262d;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --text3: #6e7681;
+  --teal: #1D9E75;
+  --teal2: #9FE1CB;
+  --teal-bg: rgba(29,158,117,0.1);
+  --teal-border: rgba(29,158,117,0.3);
+  --gold: #d29922;
+  --gold-bg: rgba(210,153,34,0.1);
+  --red: #f85149;
+  --red-bg: rgba(248,81,73,0.1);
+  --blue: #388bfd;
+  --blue-bg: rgba(56,139,253,0.1);
+  --purple: #a371f7;
+  --purple-bg: rgba(163,113,247,0.1);
+  --radius: 8px;
+  --radius-lg: 12px;
+  --sidebar-w: 240px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  font-size: 13px;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar-logo {
+  padding: 18px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--teal), #0f6e56);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.logo-text { font-size: 13px; font-weight: 600; line-height: 1.3; }
+.logo-sub { font-size: 11px; color: var(--text3); }
+
+.sidebar-section {
+  padding: 12px 8px 4px;
+}
+
+.sidebar-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: 0 8px;
+  margin-bottom: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 13px;
+  font-weight: 400;
+  transition: all 0.15s;
+  text-decoration: none;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active { background: var(--teal-bg); color: var(--teal2); font-weight: 500; }
+.nav-item .nav-icon { font-size: 15px; width: 18px; text-align: center; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--teal);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 12px 8px;
+  border-top: 1px solid var(--border);
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.user-chip:hover { background: var(--bg3); }
+
+.avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple), #7c3aed);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; color: white;
+  flex-shrink: 0;
+}
+
+.user-info { flex: 1; min-width: 0; }
+.user-name { font-size: 12px; font-weight: 500; }
+.user-role { font-size: 10px; color: var(--text3); }
+
+/* ===== MAIN ===== */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.topbar {
+  height: 52px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 12px;
+  flex-shrink: 0;
+  background: var(--bg2);
+}
+
+.topbar-title { font-size: 14px; font-weight: 600; }
+.topbar-sub { font-size: 12px; color: var(--text3); margin-left: 4px; }
+
+.topbar-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  font-size: 12px; font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer; border: none;
+  transition: all 0.15s;
+}
+
+.btn-primary {
+  background: var(--teal);
+  color: white;
+}
+.btn-primary:hover { background: #0f6e56; }
+
+.btn-secondary {
+  background: var(--bg3);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--bg4); }
+
+.btn-danger {
+  background: var(--red-bg);
+  color: var(--red);
+  border: 1px solid rgba(248,81,73,0.3);
+}
+.btn-danger:hover { background: rgba(248,81,73,0.2); }
+
+.btn-ghost {
+  background: none;
+  color: var(--text2);
+  border: 1px solid transparent;
+}
+.btn-ghost:hover { background: var(--bg3); color: var(--text); }
+
+/* ===== CONTENT ===== */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* PAGES */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ===== STATS GRID ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+.stat-label { font-size: 11px; color: var(--text3); font-weight: 500; margin-bottom: 8px; text-transform: uppercase; letter-spacing:.04em; }
+.stat-value { font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 6px; }
+.stat-delta { font-size: 11px; color: var(--text3); }
+.stat-delta.up { color: var(--teal); }
+.stat-delta.down { color: var(--red); }
+
+/* ===== CARD ===== */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-title { font-size: 13px; font-weight: 600; }
+.card-sub { font-size: 11px; color: var(--text3); margin-left: auto; }
+
+.card-body { padding: 16px; }
+
+/* ===== TABLE ===== */
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+th {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg3);
+  white-space: nowrap;
+}
+
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border2);
+  color: var(--text);
+  vertical-align: middle;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* ===== BADGE ===== */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px; font-weight: 500;
+}
+
+.badge-green { background: var(--teal-bg); color: var(--teal2); border: 1px solid var(--teal-border); }
+.badge-gold { background: var(--gold-bg); color: var(--gold); border: 1px solid rgba(210,153,34,0.3); }
+.badge-red { background: var(--red-bg); color: var(--red); border: 1px solid rgba(248,81,73,0.3); }
+.badge-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(56,139,253,0.3); }
+.badge-purple { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(163,113,247,0.3); }
+.badge-gray { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); }
+
+/* ===== GRID 2COL ===== */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+/* ===== FORM ===== */
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
+.form-label span { color: var(--red); margin-left: 2px; }
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--teal);
+}
+
+.form-select { cursor: pointer; }
+.form-textarea { resize: vertical; min-height: 80px; }
+
+.form-input::placeholder, .form-textarea::placeholder { color: var(--text3); }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.modal-title { font-size: 14px; font-weight: 600; }
+.modal-close {
+  margin-left: auto;
+  background: none; border: none;
+  color: var(--text3); cursor: pointer;
+  font-size: 18px; line-height: 1;
+  padding: 4px; border-radius: 4px;
+  transition: color 0.15s;
+}
+.modal-close:hover { color: var(--text); }
+
+.modal-body { padding: 20px; }
+.modal-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  display: flex; gap: 8px; justify-content: flex-end;
+}
+
+/* ===== QUESTION BUILDER ===== */
+.choice-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 6px;
+}
+
+.choice-correct {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.choice-correct.selected {
+  border-color: var(--teal);
+  background: var(--teal);
+}
+
+.choice-input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+}
+
+.choice-emoji {
+  width: 36px; height: 32px;
+  background: var(--bg4);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-align: center;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.choice-remove {
+  background: none; border: none;
+  color: var(--text3); cursor: pointer;
+  font-size: 16px; padding: 2px;
+  border-radius: 4px;
+  transition: color 0.15s;
+}
+.choice-remove:hover { color: var(--red); }
+
+/* ===== ACTIVITY CARDS ===== */
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.activity-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: border-color 0.15s;
+  cursor: pointer;
+}
+
+.activity-card:hover { border-color: var(--teal-border); }
+
+.activity-card-top {
+  height: 80px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  position: relative;
+}
+
+.activity-card-body { padding: 12px; }
+.activity-card-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.activity-card-sub { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
+.activity-card-footer { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+
+.activity-status-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar {
+  height: 6px;
+  background: var(--bg4);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--teal);
+  transition: width 0.3s;
+}
+
+/* ===== MINI CHART ===== */
+.chart-bars {
+  display: flex; align-items: flex-end; gap: 3px;
+  height: 50px;
+  padding-top: 4px;
+}
+
+.chart-bar {
+  flex: 1;
+  background: var(--teal-bg);
+  border-top: 2px solid var(--teal);
+  border-radius: 2px 2px 0 0;
+  transition: background 0.15s;
+  cursor: pointer;
+  min-height: 4px;
+}
+
+.chart-bar:hover { background: rgba(29,158,117,0.25); }
+
+/* ===== SEARCH ===== */
+.search-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 280px;
+}
+
+.search-input {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 7px 12px 7px 32px;
+  font-size: 12px;
+  font-family: 'Inter', sans-serif;
+  color: var(--text);
+  outline: none;
+}
+
+.search-input:focus { border-color: var(--teal); }
+.search-icon {
+  position: absolute; left: 10px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px; color: var(--text3);
+  pointer-events: none;
+}
+
+/* ===== TABS ===== */
+.tabs {
+  display: flex; gap: 2px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.tab {
+  padding: 8px 14px;
+  font-size: 12px; font-weight: 500;
+  color: var(--text3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s;
+  background: none; border-top: none; border-left: none; border-right: none;
+  font-family: 'Inter', sans-serif;
+}
+
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--teal2); border-bottom-color: var(--teal); }
+
+/* ===== TOGGLE ===== */
+.toggle {
+  width: 36px; height: 20px;
+  background: var(--bg4);
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+  flex-shrink: 0;
+}
+
+.toggle.on { background: var(--teal); }
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  background: white;
+  border-radius: 50%;
+  top: 3px; left: 3px;
+  transition: transform 0.2s;
+}
+
+.toggle.on::after { transform: translateX(16px); }
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--text3);
+}
+
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+.empty-title { font-size: 14px; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
+.empty-sub { font-size: 12px; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+/* ===== NOTIFICATION DOT ===== */
+.notif-dot {
+  width: 8px; height: 8px;
+  background: var(--teal);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ===== SECTION HEADER ===== */
+.section-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px;
+}
+
+.section-title { font-size: 15px; font-weight: 600; }
+
+/* ===== QR PREVIEW ===== */
+.qr-preview {
+  width: 80px; height: 80px;
+  background: white;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: #333; text-align: center;
+  padding: 6px;
+  line-height: 1.4;
+}
+
+/* responsive */
+@media(max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(2,1fr); }
+  .grid-2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🛡️</div>
+    <div>
+      <div class="logo-text">Cyber Room</div>
+      <div class="logo-sub">Admin Portal</div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Overview</div>
+    <button class="nav-item active" onclick="nav('dashboard')">
+      <span class="nav-icon">📊</span> Dashboard
+    </button>
+    <button class="nav-item" onclick="nav('analytics')">
+      <span class="nav-icon">📈</span> Analytics
+    </button>
+    <button class="nav-item" onclick="nav('sessions')">
+      <span class="nav-icon">👥</span> Sessions
+      <span class="nav-badge">24</span>
+    </button>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Content</div>
+    <button class="nav-item" onclick="nav('activities')">
+      <span class="nav-icon">🎮</span> Activities
+    </button>
+    <button class="nav-item" onclick="nav('questions')">
+      <span class="nav-icon">❓</span> Questions
+    </button>
+    <button class="nav-item" onclick="nav('stories')">
+      <span class="nav-icon">📖</span> Stories
+    </button>
+    <button class="nav-item" onclick="nav('media')">
+      <span class="nav-icon">🖼️</span> Media
+    </button>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Configuration</div>
+    <button class="nav-item" onclick="nav('agegroups')">
+      <span class="nav-icon">👶</span> Age Groups
+    </button>
+    <button class="nav-item" onclick="nav('certificates')">
+      <span class="nav-icon">🏆</span> Certificates
+    </button>
+    <button class="nav-item" onclick="nav('users')">
+      <span class="nav-icon">👤</span> Staff Users
+    </button>
+    <button class="nav-item" onclick="nav('settings')">
+      <span class="nav-icon">⚙️</span> Settings
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="user-chip">
+      <div class="avatar">AM</div>
+      <div class="user-info">
+        <div class="user-name">Ahmed M.</div>
+        <div class="user-role">Super Admin</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <span id="topbar-title" class="topbar-title">Dashboard</span>
+    <span id="topbar-sub" class="topbar-sub"></span>
+    <div class="topbar-actions" id="topbar-actions"></div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ======= PAGE: DASHBOARD ======= -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Today's visitors</div>
+          <div class="stat-value" style="color:var(--teal)">147</div>
+          <div class="stat-delta up">↑ 12% vs yesterday</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg pre-score</div>
+          <div class="stat-value" style="color:var(--gold)">2.4<span style="font-size:14px;color:var(--text3)">/5</span></div>
+          <div class="stat-delta">Across all age groups</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg post-score</div>
+          <div class="stat-value" style="color:var(--teal)">4.6<span style="font-size:14px;color:var(--text3)">/5</span></div>
+          <div class="stat-delta up">↑ 91.6% improvement</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Certificates issued</div>
+          <div class="stat-value" style="color:var(--purple)">132</div>
+          <div class="stat-delta up">↑ 8 in last hour</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:16px;">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Visitor activity — last 7 days</span>
+            <span class="card-sub">Total: 892</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-bars" id="weekChart"></div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;">
+              <span style="font-size:10px;color:var(--text3)">Mon</span>
+              <span style="font-size:10px;color:var(--text3)">Tue</span>
+              <span style="font-size:10px;color:var(--text3)">Wed</span>
+              <span style="font-size:10px;color:var(--text3)">Thu</span>
+              <span style="font-size:10px;color:var(--text3)">Fri</span>
+              <span style="font-size:10px;color:var(--text3)">Sat</span>
+              <span style="font-size:10px;color:var(--text3)">Sun</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Score improvement by age group</span>
+          </div>
+          <div class="card-body">
+            <div style="margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span style="font-size:12px;">7–9 years</span>
+                <span style="font-size:12px;color:var(--teal)">+88%</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:88%"></div></div>
+            </div>
+            <div style="margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span style="font-size:12px;">10–12 years</span>
+                <span style="font-size:12px;color:var(--teal)">+94%</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:94%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                <span style="font-size:12px;">13–17 years</span>
+                <span style="font-size:12px;color:var(--teal)">+97%</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:97%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Recent sessions</span>
+          <span class="card-sub">Today — 147 total</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Age group</th>
+                <th>Pre-score</th>
+                <th>Post-score</th>
+                <th>Improvement</th>
+                <th>Time</th>
+                <th>Certificate</th>
+              </tr>
+            </thead>
+            <tbody id="recentSessions"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= PAGE: ACTIVITIES ======= -->
+    <div class="page" id="page-activities">
+      <div class="section-header">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" placeholder="Search activities...">
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px;">
+          <select class="form-select" style="width:140px;padding:7px 10px;">
+            <option>All age groups</option>
+            <option>7–9 years</option>
+            <option>10–12 years</option>
+            <option>13–17 years</option>
+          </select>
+          <button class="btn btn-primary" onclick="openModal('modal-activity')">＋ New activity</button>
+        </div>
+      </div>
+
+      <div class="activity-grid" id="activitiesGrid"></div>
+    </div>
+
+    <!-- ======= PAGE: QUESTIONS ======= -->
+    <div class="page" id="page-questions">
+      <div class="section-header">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" placeholder="Search questions...">
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px;">
+          <select class="form-select" style="width:160px;padding:7px 10px;">
+            <option>All activities</option>
+            <option>رحلة الاستكشاف الرقمي</option>
+            <option>مغامرة زيد الرقمية</option>
+            <option>محطة الرادار الرقمي</option>
+          </select>
+          <button class="btn btn-primary" onclick="openModal('modal-question')">＋ New question</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:40px;">#</th>
+                <th>Question text</th>
+                <th>Activity</th>
+                <th>Age group</th>
+                <th>Choices</th>
+                <th>Status</th>
+                <th style="width:100px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="questionsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= PAGE: STORIES ======= -->
+    <div class="page" id="page-stories">
+      <div class="section-header">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" placeholder="Search story scenes...">
+        </div>
+        <div style="margin-left:auto;">
+          <button class="btn btn-primary" onclick="openModal('modal-story')">＋ New scene</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Scene</th>
+                <th>Character</th>
+                <th>Scenario text</th>
+                <th>Choices</th>
+                <th>Age group</th>
+                <th>Status</th>
+                <th style="width:100px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="storiesTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= PAGE: SESSIONS ======= -->
+    <div class="page" id="page-sessions">
+      <div class="section-header">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" placeholder="Search by name...">
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px;">
+          <button class="btn btn-secondary">⬇ Export CSV</button>
+          <input type="date" class="form-input" style="width:150px;padding:6px 10px;">
+        </div>
+      </div>
+
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:16px;">
+        <div class="stat-card">
+          <div class="stat-label">Total sessions today</div>
+          <div class="stat-value" style="color:var(--teal)">147</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Gold badges issued</div>
+          <div class="stat-value" style="color:var(--gold)">89</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Completion rate</div>
+          <div class="stat-value" style="color:var(--teal)">94%</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Visitor name</th>
+                <th>Age group</th>
+                <th>Pre</th>
+                <th>Post</th>
+                <th>Badge</th>
+                <th>Activities</th>
+                <th>Date & time</th>
+                <th>Certificate</th>
+              </tr>
+            </thead>
+            <tbody id="allSessionsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= PAGE: ANALYTICS ======= -->
+    <div class="page" id="page-analytics">
+      <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+        <div class="stat-card">
+          <div class="stat-label">Total visitors</div>
+          <div class="stat-value" style="color:var(--teal)">3,842</div>
+          <div class="stat-delta up">↑ 18% this month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Most popular activity</div>
+          <div class="stat-value" style="font-size:14px;color:var(--text)">مغامرة زيد</div>
+          <div class="stat-delta">892 completions</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg session duration</div>
+          <div class="stat-value" style="color:var(--purple)">28<span style="font-size:14px">min</span></div>
+          <div class="stat-delta">Full room experience</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Questions answered</div>
+          <div class="stat-value" style="color:var(--gold)">19.2K</div>
+          <div class="stat-delta up">↑ Total all time</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Activity completion rates</span></div>
+          <div class="card-body">
+            <div id="activityStats"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><span class="card-title">Most missed questions</span></div>
+          <div class="card-body">
+            <div id="missedQuestions"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= PAGE: AGE GROUPS ======= -->
+    <div class="page" id="page-agegroups">
+      <div id="ageGroupsContent"></div>
+    </div>
+
+    <!-- ======= PAGE: CERTIFICATES ======= -->
+    <div class="page" id="page-certificates">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><span class="card-title">Certificate templates</span></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:10px;" id="certTemplates"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Badge configuration</span></div>
+          <div class="card-body" id="badgeConfig"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= PAGE: USERS ======= -->
+    <div class="page" id="page-users">
+      <div class="section-header">
+        <div style="margin-left:auto;">
+          <button class="btn btn-primary" onclick="openModal('modal-user')">＋ Add staff member</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Name</th><th>Email</th><th>Role</th><th>Last login</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="usersTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= PAGE: MEDIA ======= -->
+    <div class="page" id="page-media">
+      <div class="section-header">
+        <div style="margin-left:auto;">
+          <button class="btn btn-primary">⬆ Upload file</button>
+        </div>
+      </div>
+      <div class="grid-3" id="mediaGrid"></div>
+    </div>
+
+    <!-- ======= PAGE: SETTINGS ======= -->
+    <div class="page" id="page-settings">
+      <div class="grid-2">
+        <div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-header"><span class="card-title">Room configuration</span></div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label">Room name (Arabic)</label>
+                <input type="text" class="form-input" value="غرفة الأمن السيبراني">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Organization name</label>
+                <input type="text" class="form-input" value="الوكالة الوطنية للأمن السيبراني">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Session timeout (minutes)</label>
+                <input type="number" class="form-input" value="45">
+              </div>
+              <button class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><span class="card-title">Feature toggles</span></div>
+            <div class="card-body" id="featureToggles"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-header"><span class="card-title">QR code settings</span></div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label">QR expiry (hours)</label>
+                <input type="number" class="form-input" value="8">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Encryption key</label>
+                <input type="password" class="form-input" value="cyber-room-secret-2024">
+              </div>
+              <div class="form-group">
+                <label class="form-label">QR size (px)</label>
+                <input type="number" class="form-input" value="200">
+              </div>
+              <button class="btn btn-primary">Save</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><span class="card-title">Printer settings</span></div>
+            <div class="card-body">
+              <div class="form-group">
+                <label class="form-label">Printer name</label>
+                <input type="text" class="form-input" value="CyberRoom-Printer-01">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Print format</label>
+                <select class="form-select">
+                  <option>Card (85×54mm)</option>
+                  <option>A5 certificate</option>
+                  <option>A4 certificate</option>
+                </select>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button class="btn btn-secondary">Test print</button>
+                <button class="btn btn-primary">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</div><!-- end main -->
+
+<!-- ===== MODALS ===== -->
+
+<!-- New Activity Modal -->
+<div class="modal-overlay" id="modal-activity">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">＋ Create new activity</span>
+      <button class="modal-close" onclick="closeModal('modal-activity')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Activity name (Arabic)<span>*</span></label>
+          <input type="text" class="form-input" placeholder="e.g. مغامرة زيد الرقمية">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Activity type<span>*</span></label>
+          <select class="form-select">
+            <option>Quiz</option>
+            <option>Story / Interactive film</option>
+            <option>Drag & sort game</option>
+            <option>Touch table game</option>
+            <option>VR experience</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Age group<span>*</span></label>
+          <select class="form-select">
+            <option>7–9 years</option>
+            <option>10–12 years</option>
+            <option>13–17 years</option>
+            <option>All ages</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Zone / Screen</label>
+          <select class="form-select">
+            <option>Testing & analysis zone</option>
+            <option>Children & early activities</option>
+            <option>Touch interaction table</option>
+            <option>Cinema & display zone</option>
+            <option>VR / AR zone</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" placeholder="Brief description of this activity..."></textarea>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Activity icon (emoji)</label>
+          <input type="text" class="form-input" placeholder="🎮" style="font-size:20px;text-align:center;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select">
+            <option>Draft</option>
+            <option>Published</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-activity')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveActivity()">Create activity</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Question Modal -->
+<div class="modal-overlay" id="modal-question">
+  <div class="modal" style="max-width:680px;">
+    <div class="modal-header">
+      <span class="modal-title">＋ Create new question</span>
+      <button class="modal-close" onclick="closeModal('modal-question')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Activity<span>*</span></label>
+          <select class="form-select">
+            <option>رحلة الاستكشاف الرقمي — 7–9</option>
+            <option>رحلة الاستكشاف الرقمي — 10–12</option>
+            <option>محطة الرادار الرقمي</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Scene emoji</label>
+          <input type="text" class="form-input" placeholder="📱💬" style="font-size:20px;text-align:center;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Question text (Arabic)<span>*</span></label>
+        <textarea class="form-textarea" placeholder="e.g. وصلتك رسالة من شخص غريب يقول: أرسل لي عنوان منزلك لتصلك هدية..." style="direction:rtl;"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Answer choices <span style="color:var(--text3);font-weight:400;">(click circle to mark correct)</span></label>
+        <div id="choicesList">
+          <div class="choice-item">
+            <button class="choice-correct selected" onclick="toggleCorrect(this)"></button>
+            <input class="form-input" style="background:none;border:none;padding:0;" placeholder="Choice text (Arabic)..." value="أحذف الرسالة فوراً ولا أرد">
+            <input type="text" class="choice-emoji" value="🗑️">
+            <button class="choice-remove" onclick="removeChoice(this)">✕</button>
+          </div>
+          <div class="choice-item">
+            <button class="choice-correct" onclick="toggleCorrect(this)"></button>
+            <input class="form-input" style="background:none;border:none;padding:0;" placeholder="Choice text (Arabic)..." value="أكتب العنوان وأرسله">
+            <input type="text" class="choice-emoji" value="🏠">
+            <button class="choice-remove" onclick="removeChoice(this)">✕</button>
+          </div>
+        </div>
+        <button class="btn btn-ghost" style="margin-top:6px;" onclick="addChoice()">＋ Add choice</button>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Correct answer feedback</label>
+          <textarea class="form-textarea" placeholder="Feedback shown when correct..." style="direction:rtl;min-height:60px;">ممتاز! لا نرسل عنواننا أبداً لشخص لا نعرفه</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Wrong answer feedback</label>
+          <textarea class="form-textarea" placeholder="Feedback shown when wrong..." style="direction:rtl;min-height:60px;">تمهّل! الغرباء على الإنترنت قد يكونون خطرين</textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-question')">Cancel</button>
+      <button class="btn btn-primary">Save question</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Story Scene Modal -->
+<div class="modal-overlay" id="modal-story">
+  <div class="modal" style="max-width:680px;">
+    <div class="modal-header">
+      <span class="modal-title">＋ Create story scene</span>
+      <button class="modal-close" onclick="closeModal('modal-story')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Story / Activity<span>*</span></label>
+          <select class="form-select">
+            <option>مغامرة زيد الرقمية</option>
+            <option>بث مباشر</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Scene order</label>
+          <input type="number" class="form-input" value="1" min="1">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Scene emoji 1</label>
+          <input type="text" class="form-input" placeholder="🧒" style="font-size:24px;text-align:center;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Scene emoji 2</label>
+          <input type="text" class="form-input" placeholder="📱" style="font-size:24px;text-align:center;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Scene label</label>
+        <input type="text" class="form-input" placeholder="e.g. زيد يتصفح هاتفه" style="direction:rtl;">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Scene narrative text (Arabic)<span>*</span></label>
+        <textarea class="form-textarea" style="direction:rtl;min-height:90px;" placeholder="Describe what happens in this scene..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Question asked to child</label>
+        <input type="text" class="form-input" placeholder="e.g. ماذا يجب أن يفعل زيد؟" style="direction:rtl;">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Answer choices</label>
+        <div id="storyChoicesList">
+          <div class="choice-item">
+            <button class="choice-correct selected" onclick="toggleCorrect(this)"></button>
+            <input class="form-input" style="background:none;border:none;padding:0;direction:rtl;" placeholder="Choice text...">
+            <button class="choice-remove" onclick="removeChoice(this)">✕</button>
+          </div>
+          <div class="choice-item">
+            <button class="choice-correct" onclick="toggleCorrect(this)"></button>
+            <input class="form-input" style="background:none;border:none;padding:0;direction:rtl;" placeholder="Choice text...">
+            <button class="choice-remove" onclick="removeChoice(this)">✕</button>
+          </div>
+        </div>
+        <button class="btn btn-ghost" style="margin-top:6px;" onclick="addStoryChoice()">＋ Add choice</button>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Lesson title</label>
+          <input type="text" class="form-input" placeholder="e.g. 🎯 درس مهم" style="direction:rtl;">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Lesson explanation</label>
+          <textarea class="form-textarea" style="direction:rtl;min-height:60px;" placeholder="Explanation shown after answering..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-story')">Cancel</button>
+      <button class="btn btn-primary">Save scene</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Staff User Modal -->
+<div class="modal-overlay" id="modal-user">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-header">
+      <span class="modal-title">＋ Add staff member</span>
+      <button class="modal-close" onclick="closeModal('modal-user')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Full name<span>*</span></label>
+        <input type="text" class="form-input" placeholder="Ahmed Al-Rashidi">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email<span>*</span></label>
+        <input type="email" class="form-input" placeholder="ahmed@ncsa.gov.qa">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Role<span>*</span></label>
+        <select class="form-select">
+          <option>Room guide (read only)</option>
+          <option>Content editor</option>
+          <option>Admin</option>
+          <option>Super admin</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Temporary password</label>
+        <input type="text" class="form-input" value="CyberRoom2024!" style="font-family:'JetBrains Mono',monospace;">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-user')">Cancel</button>
+      <button class="btn btn-primary">Create account</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== NAV =====
+const pageTitles = {
+  dashboard: ['Dashboard', 'Overview of today\'s activity'],
+  analytics: ['Analytics', 'Detailed statistics and reports'],
+  sessions: ['Sessions', 'All visitor sessions'],
+  activities: ['Activities', 'Manage interactive screens'],
+  questions: ['Questions', 'Quiz & assessment questions'],
+  stories: ['Stories', 'Interactive story scenes'],
+  media: ['Media library', 'Images, audio and assets'],
+  agegroups: ['Age groups', 'Configure groups and content'],
+  certificates: ['Certificates', 'Badge and certificate design'],
+  users: ['Staff users', 'Admin access management'],
+  settings: ['Settings', 'Room and system configuration'],
+};
+
+const topbarActions = {
+  activities: `<button class="btn btn-primary" onclick="openModal('modal-activity')">＋ New activity</button>`,
+  questions: `<button class="btn btn-primary" onclick="openModal('modal-question')">＋ New question</button>`,
+  stories: `<button class="btn btn-primary" onclick="openModal('modal-story')">＋ New scene</button>`,
+  users: `<button class="btn btn-primary" onclick="openModal('modal-user')">＋ Add staff</button>`,
+  sessions: `<button class="btn btn-secondary">⬇ Export CSV</button>`,
+  analytics: `<button class="btn btn-secondary">⬇ Download report</button>`,
+};
+
+function nav(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') === `nav('${page}')`) n.classList.add('active');
+  });
+  const [title, sub] = pageTitles[page] || [page, ''];
+  document.getElementById('topbar-title').textContent = title;
+  document.getElementById('topbar-sub').textContent = sub ? '/ ' + sub : '';
+  document.getElementById('topbar-actions').innerHTML = topbarActions[page] || '';
+}
+
+// ===== MODAL =====
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+
+// ===== CHOICES =====
+function addChoice() {
+  const list = document.getElementById('choicesList');
+  const div = document.createElement('div');
+  div.className = 'choice-item';
+  div.innerHTML = `
+    <button class="choice-correct" onclick="toggleCorrect(this)"></button>
+    <input class="form-input" style="background:none;border:none;padding:0;" placeholder="Choice text (Arabic)...">
+    <input type="text" class="choice-emoji" value="❓">
+    <button class="choice-remove" onclick="removeChoice(this)">✕</button>`;
+  list.appendChild(div);
+}
+
+function addStoryChoice() {
+  const list = document.getElementById('storyChoicesList');
+  const div = document.createElement('div');
+  div.className = 'choice-item';
+  div.innerHTML = `
+    <button class="choice-correct" onclick="toggleCorrect(this)"></button>
+    <input class="form-input" style="background:none;border:none;padding:0;direction:rtl;" placeholder="Choice text...">
+    <button class="choice-remove" onclick="removeChoice(this)">✕</button>`;
+  list.appendChild(div);
+}
+
+function toggleCorrect(btn) {
+  const list = btn.closest('#choicesList, #storyChoicesList');
+  if (list) list.querySelectorAll('.choice-correct').forEach(b => b.classList.remove('selected'));
+  btn.classList.toggle('selected');
+}
+
+function removeChoice(btn) {
+  btn.closest('.choice-item').remove();
+}
+
+// ===== DATA =====
+const sessions = [
+  { name: 'سارة محمد', age: '7–9', pre: 2, post: 5, time: '10:32 AM', badge: 'gold' },
+  { name: 'خالد عبدالله', age: '10–12', pre: 3, post: 5, time: '10:18 AM', badge: 'gold' },
+  { name: 'ريم الشمري', age: '13–17', pre: 1, post: 4, time: '10:05 AM', badge: 'silver' },
+  { name: 'أحمد فاروق', age: '7–9', pre: 2, post: 4, time: '09:52 AM', badge: 'silver' },
+  { name: 'نورة القحطاني', age: '10–12', pre: 4, post: 5, time: '09:41 AM', badge: 'gold' },
+  { name: 'ماجد العتيبي', age: '13–17', pre: 2, post: 5, time: '09:28 AM', badge: 'gold' },
+  { name: 'فاطمة الزهراني', age: '7–9', pre: 1, post: 3, time: '09:15 AM', badge: 'bronze' },
+];
+
+const activities = [
+  { name: 'رحلة الاستكشاف الرقمي', type: 'Quiz', age: '7–9', icon: '🔍', status: 'published', questions: 5 },
+  { name: 'مرآة الأمان', type: 'Interactive', age: '7–9', icon: '🪞', status: 'published', questions: 5 },
+  { name: 'نهر الفقاعات', type: 'Drag game', age: '7–9', icon: '🫧', status: 'published', questions: 0 },
+  { name: 'مغامرة زيد الرقمية', type: 'Story', age: '7–9', icon: '🎬', status: 'published', questions: 5 },
+  { name: 'طبّاخ المعلومات', type: 'Drag game', age: '7–9', icon: '🍳', status: 'published', questions: 0 },
+  { name: 'محطة الرادار الرقمي', type: 'Quiz', age: '10–12', icon: '📡', status: 'published', questions: 5 },
+  { name: 'شبكتي', type: 'Drag game', age: '10–12', icon: '🕸️', status: 'published', questions: 0 },
+  { name: 'مهمة: أنقذ الملف', type: 'Mission game', age: '10–12', icon: '🛡️', status: 'draft', questions: 0 },
+  { name: 'بث مباشر', type: 'Story', age: '10–12', icon: '📺', status: 'published', questions: 3 },
+  { name: 'مختبر الهندسة الاجتماعية', type: 'Analysis', age: '13–17', icon: '🔬', status: 'published', questions: 4 },
+  { name: 'مركز إدارة الأزمات', type: 'Simulation', age: '13–17', icon: '🚨', status: 'draft', questions: 0 },
+  { name: 'خريطة التهديدات', type: 'Map', age: 'All', icon: '🗺️', status: 'published', questions: 0 },
+];
+
+const questions = [
+  { id: 1, text: 'وصلتك رسالة من شخص غريب يقول: أرسل لي عنوان منزلك...', activity: 'رحلة الاستكشاف الرقمي', age: '7–9', choices: 2, status: 'published' },
+  { id: 2, text: 'أثناء استخدامك الحاسوب ظهرت نافذة: اضغط هنا لتربح جائزة!', activity: 'رحلة الاستكشاف الرقمي', age: '7–9', choices: 2, status: 'published' },
+  { id: 3, text: 'طلبت منك لعبة إلكترونية صورة البطاقة البنكية لعائلتك...', activity: 'رحلة الاستكشاف الرقمي', age: '7–9', choices: 2, status: 'published' },
+  { id: 4, text: 'صديق في لعبتك يطلب منك كلمة مرورك الخاصة لمساعدتك...', activity: 'رحلة الاستكشاف الرقمي', age: '7–9', choices: 2, status: 'published' },
+  { id: 5, text: 'استقبال رسالة نصية تبدو من المصرف تطلب الضغط على رابط...', activity: 'محطة الرادار الرقمي', age: '10–12', choices: 2, status: 'published' },
+  { id: 6, text: 'مستخدم ينشئ كلمة مرور جديدة عبارة عن رموز وأرقام وحروف...', activity: 'محطة الرادار الرقمي', age: '10–12', choices: 2, status: 'published' },
+];
+
+const storyScenes = [
+  { scene: '📱➡️', char: 'زيد', text: 'يلعب زيد على هاتفه ويتلقى إشعاراً: مبروك لقد ربحت جائزة...', choices: 3, age: '7–9', status: 'published' },
+  { scene: '🎮👤', char: 'زيد', text: 'يظهر في لعبة زيد طلب صداقة من شخص غريب AlMajhoul99...', choices: 2, age: '7–9', status: 'published' },
+  { scene: '🧒💻', char: 'زيد', text: 'يريد زيد التسجيل في موقع ألعاب ويطلب منه رقم هاتف والده...', choices: 2, age: '7–9', status: 'published' },
+  { scene: '📡⚠️', char: 'المدوّن', text: 'رسالة خاصة من @زائر_غامض: أرسل لي عنوان منزلك لتصلك هدية...', choices: 2, age: '10–12', status: 'published' },
+];
+
+const users = [
+  { name: 'Ahmed Al-Mansoori', email: 'ahmed@ncsa.gov.qa', role: 'Super admin', last: '5 min ago', status: 'active' },
+  { name: 'Fatima Al-Rashidi', email: 'fatima@ncsa.gov.qa', role: 'Content editor', last: '2 hours ago', status: 'active' },
+  { name: 'Khalid Hamdan', email: 'khalid@ncsa.gov.qa', role: 'Room guide', last: 'Yesterday', status: 'active' },
+  { name: 'Noura Saleh', email: 'noura@ncsa.gov.qa', role: 'Admin', last: '3 days ago', status: 'inactive' },
+];
+
+// ===== RENDER FUNCTIONS =====
+function renderSessions(tbody, data) {
+  tbody.innerHTML = data.map(s => {
+    const imp = Math.round((s.post - s.pre) / 5 * 100);
+    const badgeClass = s.badge === 'gold' ? 'badge-gold' : s.badge === 'silver' ? 'badge-gray' : 'badge-red';
+    const badgeLabel = s.badge === 'gold' ? '⭐ Gold' : s.badge === 'silver' ? '🥈 Silver' : '🥉 Bronze';
+    return `<tr>
+      <td style="font-weight:500;">${s.name}</td>
+      <td><span class="badge badge-blue">${s.age}</span></td>
+      <td>${s.pre}/5</td>
+      <td style="color:var(--teal);font-weight:500;">${s.post}/5</td>
+      <td><span style="color:var(--teal);">+${imp}%</span></td>
+      <td style="color:var(--text3);">${s.time}</td>
+      <td><span class="badge ${badgeClass}">${badgeLabel}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderActivities() {
+  const grid = document.getElementById('activitiesGrid');
+  const bgColors = ['rgba(29,158,117,0.1)','rgba(56,139,253,0.1)','rgba(163,113,247,0.1)','rgba(210,153,34,0.1)','rgba(248,81,73,0.1)'];
+  grid.innerHTML = activities.map((a, i) => `
+    <div class="activity-card">
+      <div class="activity-card-top" style="background:${bgColors[i%5]}">
+        <span style="font-size:40px;">${a.icon}</span>
+        ${a.status === 'draft' ? '<span class="badge badge-gold" style="position:absolute;top:8px;right:8px;">Draft</span>' : ''}
+      </div>
+      <div class="activity-card-body">
+        <div class="activity-card-title" style="direction:rtl;">${a.name}</div>
+        <div class="activity-card-sub">${a.type} · ${a.age}</div>
+        ${a.questions > 0 ? `<div style="font-size:11px;color:var(--text3);">${a.questions} questions</div>` : ''}
+        <div class="activity-card-footer">
+          <div class="activity-status-dot" style="background:${a.status === 'published' ? 'var(--teal)' : 'var(--gold)'}"></div>
+          <span style="font-size:11px;color:var(--text3);">${a.status}</span>
+          <div style="margin-left:auto;display:flex;gap:6px;">
+            <button class="btn btn-ghost" style="padding:4px 8px;font-size:11px;">Edit</button>
+            <button class="btn btn-ghost" style="padding:4px 8px;font-size:11px;">Preview</button>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderQuestions() {
+  document.getElementById('questionsTable').innerHTML = questions.map(q => `
+    <tr>
+      <td style="color:var(--text3);">${q.id}</td>
+      <td style="max-width:280px;direction:rtl;">
+        <div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${q.text}</div>
+      </td>
+      <td style="direction:rtl;font-size:11px;">${q.activity}</td>
+      <td><span class="badge badge-blue">${q.age}</span></td>
+      <td>${q.choices} choices</td>
+      <td><span class="badge badge-green">${q.status}</span></td>
+      <td>
+        <div style="display:flex;gap:4px;">
+          <button class="btn btn-ghost" style="padding:3px 8px;" onclick="openModal('modal-question')">Edit</button>
+          <button class="btn btn-danger" style="padding:3px 8px;">Del</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function renderStories() {
+  document.getElementById('storiesTable').innerHTML = storyScenes.map(s => `
+    <tr>
+      <td style="font-size:22px;">${s.scene}</td>
+      <td style="font-weight:500;">${s.char}</td>
+      <td style="max-width:260px;direction:rtl;">
+        <div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;">${s.text}</div>
+      </td>
+      <td>${s.choices} choices</td>
+      <td><span class="badge badge-blue">${s.age}</span></td>
+      <td><span class="badge badge-green">${s.status}</span></td>
+      <td>
+        <div style="display:flex;gap:4px;">
+          <button class="btn btn-ghost" style="padding:3px 8px;" onclick="openModal('modal-story')">Edit</button>
+          <button class="btn btn-danger" style="padding:3px 8px;">Del</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function renderUsers() {
+  document.getElementById('usersTable').innerHTML = users.map(u => `
+    <tr>
+      <td style="font-weight:500;">${u.name}</td>
+      <td style="color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:11px;">${u.email}</td>
+      <td><span class="badge ${u.role === 'Super admin' ? 'badge-purple' : u.role === 'Admin' ? 'badge-blue' : u.role === 'Content editor' ? 'badge-gold' : 'badge-gray'}">${u.role}</span></td>
+      <td style="color:var(--text3);">${u.last}</td>
+      <td><span class="badge ${u.status === 'active' ? 'badge-green' : 'badge-gray'}">${u.status}</span></td>
+      <td>
+        <div style="display:flex;gap:4px;">
+          <button class="btn btn-ghost" style="padding:3px 8px;">Edit</button>
+          <button class="btn btn-danger" style="padding:3px 8px;">Remove</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+function renderChart() {
+  const vals = [78, 112, 95, 134, 147, 88, 43];
+  const max = Math.max(...vals);
+  document.getElementById('weekChart').innerHTML = vals.map(v =>
+    `<div class="chart-bar" style="height:${Math.round(v/max*46)}px" title="${v} visitors"></div>`
+  ).join('');
+}
+
+function renderAgeGroups() {
+  const groups = [
+    { label: '7–9 years', ar: 'الفئة العمرية الأولى', color: 'var(--teal)', activities: ['رحلة الاستكشاف الرقمي', 'مرآة الأمان', 'نهر الفقاعات', 'مغامرة زيد الرقمية', 'طبّاخ المعلومات', 'المدينة الآمنة', 'قلعة الأمان', 'المستشفى السيبراني'], visitors: 612 },
+    { label: '10–12 years', ar: 'الفئة العمرية الثانية', color: 'var(--blue)', activities: ['رحلة الاستكشاف الرقمي', 'محطة الرادار الرقمي', 'شبكتي', 'مهمة: أنقذ الملف', 'المحكمة السيبرانية', 'بث مباشر', 'مختبر التحليل الرقمي'], visitors: 483 },
+    { label: '13–17 years', ar: 'الفئة العمرية الثالثة', color: 'var(--purple)', activities: ['رحلة الاستكشاف الرقمي', 'مركز إدارة الأزمات', 'مختبر الهندسة الاجتماعية', 'المحكمة السيبرانية', 'غرفة العمليات السيبرانية', 'مختبر التحليل الرقمي', 'رحلة داخل الحاسوب'], visitors: 347 },
+  ];
+  document.getElementById('ageGroupsContent').innerHTML = `<div class="grid-3">` + groups.map(g => `
+    <div class="card">
+      <div class="card-header" style="border-left:3px solid ${g.color};">
+        <div>
+          <div class="card-title">${g.label}</div>
+          <div style="font-size:11px;color:var(--text3);direction:rtl;">${g.ar}</div>
+        </div>
+        <span class="badge badge-green" style="margin-left:auto;">${g.visitors} visitors</span>
+      </div>
+      <div class="card-body">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Assigned activities</div>
+        ${g.activities.map(a => `
+          <div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--border2);direction:rtl;">
+            <div class="notif-dot" style="background:${g.color}"></div>
+            <span style="font-size:12px;">${a}</span>
+          </div>`).join('')}
+        <button class="btn btn-ghost" style="margin-top:10px;width:100%;">＋ Assign activity</button>
+      </div>
+    </div>`).join('') + `</div>`;
+}
+
+function renderCertificates() {
+  const templates = [
+    { name: 'Gold certificate', badge: '⭐', minScore: 4, color: 'var(--gold)', active: true },
+    { name: 'Silver certificate', badge: '🥈', minScore: 3, color: '#8b949e', active: true },
+    { name: 'Bronze certificate', badge: '🥉', minScore: 1, color: '#cd7f32', active: true },
+  ];
+  document.getElementById('certTemplates').innerHTML = templates.map(t => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);">
+      <span style="font-size:28px;">${t.badge}</span>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:500;">${t.name}</div>
+        <div style="font-size:11px;color:var(--text3);">Min score: ${t.minScore}/5</div>
+      </div>
+      <button class="toggle on"></button>
+    </div>`).join('');
+
+  document.getElementById('badgeConfig').innerHTML = `
+    <div class="form-group">
+      <label class="form-label">Certificate title text</label>
+      <input type="text" class="form-input" value="أنت الآن بطل الأمن السيبراني!" style="direction:rtl;">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Organization logo URL</label>
+      <input type="text" class="form-input" placeholder="https://...">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Card format</label>
+      <select class="form-select">
+        <option>85×54mm (wallet card)</option>
+        <option>A5 landscape</option>
+        <option>A4 portrait</option>
+      </select>
+    </div>
+    <div class="form-group" style="display:flex;align-items:center;justify-content:space-between;">
+      <label class="form-label" style="margin:0;">Print QR on card</label>
+      <button class="toggle on"></button>
+    </div>
+    <div class="form-group" style="display:flex;align-items:center;justify-content:space-between;">
+      <label class="form-label" style="margin:0;">Include score comparison</label>
+      <button class="toggle on"></button>
+    </div>
+    <button class="btn btn-primary" style="margin-top:4px;">Save configuration</button>`;
+}
+
+function renderAnalytics() {
+  const actStats = [
+    { name: 'مغامرة زيد', pct: 94 }, { name: 'رحلة الاستكشاف', pct: 100 },
+    { name: 'طبّاخ المعلومات', pct: 87 }, { name: 'بث مباشر', pct: 82 },
+    { name: 'مركز الأزمات', pct: 71 },
+  ];
+  document.getElementById('activityStats').innerHTML = actStats.map(a => `
+    <div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+        <span style="font-size:12px;direction:rtl;">${a.name}</span>
+        <span style="font-size:12px;color:var(--teal);">${a.pct}%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${a.pct}%"></div></div>
+    </div>`).join('');
+
+  const missed = [
+    { q: 'سؤال كلمة المرور الضعيفة', pct: 42 },
+    { q: 'سؤال الرابط المشبوه', pct: 38 },
+    { q: 'سؤال مشاركة الصور', pct: 31 },
+    { q: 'سؤال هوية الغرباء', pct: 27 },
+  ];
+  document.getElementById('missedQuestions').innerHTML = missed.map(m => `
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border2);direction:rtl;">
+      <span style="font-size:12px;flex:1;">${m.q}</span>
+      <span class="badge badge-red">${m.pct}% missed</span>
+    </div>`).join('');
+}
+
+function renderMedia() {
+  const items = [
+    { name: 'mascot-robot.svg', type: 'SVG', size: '12kb', icon: '🤖' },
+    { name: 'zaid-character.png', type: 'PNG', size: '84kb', icon: '🧒' },
+    { name: 'success-sound.mp3', type: 'MP3', size: '32kb', icon: '🔊' },
+    { name: 'background-city.jpg', type: 'JPG', size: '220kb', icon: '🏙️' },
+    { name: 'shield-icon.svg', type: 'SVG', size: '4kb', icon: '🛡️' },
+    { name: 'fail-buzzer.mp3', type: 'MP3', size: '18kb', icon: '🔔' },
+  ];
+  document.getElementById('mediaGrid').innerHTML = items.map(m => `
+    <div class="card" style="cursor:pointer;" onmouseenter="this.style.borderColor='var(--teal-border)'" onmouseleave="this.style.borderColor='var(--border)'">
+      <div style="height:70px;display:flex;align-items:center;justify-content:center;font-size:36px;background:var(--bg3);">${m.icon}</div>
+      <div class="card-body" style="padding:10px;">
+        <div style="font-size:12px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${m.name}</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px;">${m.type} · ${m.size}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderSettings() {
+  const features = [
+    { label: 'QR card printing', on: true },
+    { label: 'Pre/post score comparison', on: true },
+    { label: 'Certificate auto-print', on: true },
+    { label: 'Analytics tracking', on: true },
+    { label: 'Offline mode', on: false },
+    { label: 'Multi-language support', on: false },
+  ];
+  document.getElementById('featureToggles').innerHTML = features.map(f => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border2);">
+      <span style="font-size:13px;">${f.label}</span>
+      <button class="toggle ${f.on ? 'on' : ''}" onclick="this.classList.toggle('on')"></button>
+    </div>`).join('');
+}
+
+function saveActivity() {
+  closeModal('modal-activity');
+}
+
+// ===== INIT =====
+renderSessions(document.getElementById('recentSessions'), sessions);
+renderSessions(document.getElementById('allSessionsTable'), [...sessions, ...sessions.slice(0,3)]);
+renderActivities();
+renderQuestions();
+renderStories();
+renderUsers();
+renderChart();
+renderAgeGroups();
+renderCertificates();
+renderAnalytics();
+renderMedia();
+renderSettings();
+</script>
+</body>
+</html>
