@@ -638,22 +638,238 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   line-height: 1.4;
 }
 
-/* responsive */
-@media(max-width: 900px) {
-  .stats-grid { grid-template-columns: repeat(2,1fr); }
-  .grid-2 { grid-template-columns: 1fr; }
+/* ===== MOBILE OVERLAY & HAMBURGER ===== */
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 199;
+  backdrop-filter: blur(2px);
+}
+
+.hamburger {
+  display: none;
+  background: none; border: none;
+  color: var(--text); cursor: pointer;
+  padding: 6px; border-radius: var(--radius);
+  font-size: 20px; line-height: 1;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.hamburger:hover { background: var(--bg3); }
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Tablet: 600–1024px */
+@media (max-width: 1024px) {
+  :root { --sidebar-w: 220px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .activity-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Mobile: ≤768px — sidebar becomes a drawer */
+@media (max-width: 768px) {
+  :root { --sidebar-w: 260px; }
+
+  body { overflow: hidden; }
+
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+  }
+
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+
+  .hamburger { display: flex; align-items: center; justify-content: center; }
+
+  .main { width: 100%; }
+
+  .topbar { padding: 0 12px; gap: 8px; }
+  .topbar-title { font-size: 13px; }
+  .topbar-sub { display: none; }
+  .topbar-actions { gap: 6px; }
+  .topbar-actions .btn { padding: 5px 10px; font-size: 11px; }
+  .topbar-actions .btn:not(:last-child) { display: none; }
+  .topbar-actions .btn:last-child { display: inline-flex; }
+
+  .content { padding: 12px; }
+
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .stat-card { padding: 12px; }
+  .stat-value { font-size: 22px; }
+
+  .grid-2 { grid-template-columns: 1fr; gap: 10px; }
+  .grid-3 { grid-template-columns: 1fr; gap: 10px; }
+
+  .activity-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .section-header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .section-header .search-wrap { order: 1; flex: 1 1 100%; max-width: 100%; }
+  .section-header > div:last-child { order: 2; margin-left: 0; width: 100%; display: flex; gap: 6px; flex-wrap: wrap; }
+  .section-header select { flex: 1; }
+
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 520px; }
+
+  .card-header { flex-wrap: wrap; gap: 6px; }
+
+  .modal { max-width: 100%; margin: 0; border-radius: 16px 16px 0 0; }
+  .modal-overlay { align-items: flex-end; padding: 0; }
+
+  /* Hide less important table columns on mobile */
+  th:nth-child(5), td:nth-child(5),
+  th:nth-child(6), td:nth-child(6) {
+    display: none;
+  }
+
+  /* Dev portal mobile adjustments */
+  #page-dev-builder .grid-2 { grid-template-columns: 1fr; }
+  #page-dev-api .grid-2 { grid-template-columns: 1fr; }
+  #page-dev-hooks .grid-2 { grid-template-columns: 1fr; }
+  #page-dev-deploy .grid-2 { grid-template-columns: 1fr; }
+
+  .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tab { white-space: nowrap; }
+}
+
+/* Small mobile: ≤480px */
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .stat-value { font-size: 20px; }
+  .stat-label { font-size: 10px; }
+
+  .activity-grid { grid-template-columns: 1fr; }
+
+  .activity-card-top { height: 60px; }
+  .activity-card-top span { font-size: 28px !important; }
+
+  .topbar { height: 48px; }
+
+  .btn { padding: 5px 10px; font-size: 11px; }
+
+  /* Stack badge and action buttons in table */
+  th:nth-child(4), td:nth-child(4) { display: none; }
+
+  .modal-body { padding: 14px; }
+  .modal-header { padding: 12px 14px; }
+
+  .grid-2.modal-grid { grid-template-columns: 1fr; }
+
+  pre, .form-textarea[style*="JetBrains"] { font-size: 10px; }
+}
+
+/* ===== BOTTOM NAV BAR (mobile only) ===== */
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 56px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    z-index: 100;
+    align-items: stretch;
+  }
+
+  .bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: none;
+    border: none;
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 9px;
+    font-family: Inter, sans-serif;
+    font-weight: 500;
+    transition: color 0.15s;
+    padding: 0;
+  }
+
+  .bottom-nav-item .bn-icon { font-size: 18px; }
+  .bottom-nav-item.active { color: var(--teal); }
+  .bottom-nav-item:hover { color: var(--text); }
+
+  /* Push content above bottom nav */
+  .content { padding-bottom: 68px; }
+}
+
+/* ===== MOBILE ROLE SWITCHER ===== */
+@media (max-width: 768px) {
+  .role-switcher-mobile {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .role-switcher-mobile button {
+    flex: 1;
+    padding: 7px 4px;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: Inter, sans-serif;
+    cursor: pointer;
+    background: var(--bg3);
+    color: var(--text2);
+    transition: all 0.2s;
+  }
+}
+
+/* ===== TOUCH IMPROVEMENTS ===== */
+@media (pointer: coarse) {
+  .btn { min-height: 38px; }
+  .nav-item { min-height: 40px; }
+  .choice-correct { width: 20px; height: 20px; }
+  input, select, textarea { font-size: 16px !important; } /* prevent iOS zoom */
+  .form-select { font-size: 16px !important; }
+}
+
+/* ===== SAFE AREA (notch phones) ===== */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .bottom-nav { padding-bottom: env(safe-area-inset-bottom); height: calc(56px + env(safe-area-inset-bottom)); }
+  .content { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
 }
 
 @keyframes slideUp {
   from { transform: translateY(16px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
+
+@keyframes drawerIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
 </style>
 </head>
 <body>
 
+<!-- Mobile sidebar overlay -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
 <!-- ===== SIDEBAR ===== -->
-<nav class="sidebar">
+<nav class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <div class="logo-icon">🛡️</div>
     <div>
@@ -779,6 +995,7 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 
   <!-- TOPBAR -->
   <div class="topbar">
+    <button class="hamburger" onclick="openSidebar()" aria-label="Open menu">☰</button>
     <span id="topbar-title" class="topbar-title">Dashboard</span>
     <span id="topbar-sub" class="topbar-sub"></span>
     <div class="topbar-actions" id="topbar-actions"></div>
@@ -1450,6 +1667,30 @@ tr:hover td { background: rgba(255,255,255,0.02); }
   </div><!-- end content -->
 </div><!-- end main -->
 
+<!-- ===== BOTTOM NAV (mobile only) ===== -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="bottom-nav-item active" onclick="bottomNav('dashboard', this)" id="bn-dashboard">
+    <span class="bn-icon">📊</span>
+    <span>Dashboard</span>
+  </button>
+  <button class="bottom-nav-item" onclick="bottomNav('activities', this)" id="bn-activities">
+    <span class="bn-icon">🎮</span>
+    <span>Activities</span>
+  </button>
+  <button class="bottom-nav-item" onclick="bottomNav('questions', this)" id="bn-questions">
+    <span class="bn-icon">❓</span>
+    <span>Questions</span>
+  </button>
+  <button class="bottom-nav-item" onclick="bottomNav('sessions', this)" id="bn-sessions">
+    <span class="bn-icon">👥</span>
+    <span>Sessions</span>
+  </button>
+  <button class="bottom-nav-item" onclick="openSidebar()" id="bn-more">
+    <span class="bn-icon">⋯</span>
+    <span>More</span>
+  </button>
+</nav>
+
 <!-- ===== MODALS ===== -->
 
 <!-- New Activity Modal -->
@@ -1759,16 +2000,7 @@ const topbarActions = {
 };
 
 function nav(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => {
-    if (n.getAttribute('onclick') === `nav('${page}')`) n.classList.add('active');
-  });
-  const [title, sub] = pageTitles[page] || [page, ''];
-  document.getElementById('topbar-title').textContent = title;
-  document.getElementById('topbar-sub').textContent = sub ? '/ ' + sub : '';
-  document.getElementById('topbar-actions').innerHTML = topbarActions[page] || '';
+  // defined in mobile sidebar section — this is a no-op placeholder replaced at runtime
 }
 
 // ===== MODAL =====
@@ -2451,6 +2683,52 @@ renderAnalytics();
 renderMedia();
 renderSettings();
 
+// ===== MOBILE SIDEBAR =====
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sidebar-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close sidebar on nav click (mobile)
+function nav(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pageEl = document.getElementById('page-' + page);
+  if (pageEl) pageEl.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') === `nav('${page}')`) n.classList.add('active');
+  });
+  const [title, sub] = pageTitles[page] || [page, ''];
+  document.getElementById('topbar-title').textContent = title;
+  document.getElementById('topbar-sub').textContent = sub ? '/ ' + sub : '';
+  document.getElementById('topbar-actions').innerHTML = topbarActions[page] || '';
+  // Auto-close sidebar on mobile after nav
+  if (window.innerWidth <= 768) closeSidebar();
+}
+
+// ===== BOTTOM NAV =====
+function bottomNav(page, btn) {
+  document.querySelectorAll('.bottom-nav-item').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  nav(page);
+}
+
+// Swipe to open/close sidebar
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (dx > 60 && touchStartX < 30) openSidebar();
+  if (dx < -60) closeSidebar();
+}, { passive: true });
+
 // ===== ROLE SWITCHER =====
 let currentRole = 'admin';
 
@@ -2969,23 +3247,24 @@ function setDevPreviewDevice(mode) {
   else { box.style.width = '430px'; box.style.height = '780px'; }
 }
 
-// ===== EXTEND NAV FOR DEV PAGES =====
-const _navOld = nav;
+// ===== DEV PAGE RENDER ON NAV =====
+const _devRenders = {
+  'dev-templates': renderDevTemplates,
+  'dev-api': () => { renderApiEndpoints(); },
+  'dev-components': renderComponents,
+  'dev-hooks': renderHooks,
+  'dev-screens': renderScreens,
+  'dev-deploy': renderDeploySteps,
+  'dev-logs': renderLogs,
+  'dev-builder': () => { renderTemplateChecklist(); updateBuilderPreview(); },
+  'dev-preview': populatePreviewSelect,
+};
+
+// Patch nav to also trigger dev renders
+const _baseMobileNav = nav;
 window.nav = function(page) {
-  _navOld(page);
-  // render dev pages on demand
-  const devRenders = {
-    'dev-templates': renderDevTemplates,
-    'dev-api': () => { renderApiEndpoints(); },
-    'dev-components': renderComponents,
-    'dev-hooks': renderHooks,
-    'dev-screens': renderScreens,
-    'dev-deploy': renderDeploySteps,
-    'dev-logs': renderLogs,
-    'dev-builder': () => { renderTemplateChecklist(); updateBuilderPreview(); },
-    'dev-preview': populatePreviewSelect,
-  };
-  if (devRenders[page]) devRenders[page]();
+  _baseMobileNav(page);
+  if (_devRenders[page]) _devRenders[page]();
 };
 </script>
 </body>
