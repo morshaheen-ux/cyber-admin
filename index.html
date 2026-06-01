@@ -981,9 +981,9 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 
   <div class="sidebar-footer">
     <div class="user-chip">
-      <div class="avatar" id="user-avatar" style="background:linear-gradient(135deg,var(--purple),#7c3aed);">AM</div>
+      <div class="avatar" id="user-avatar" style="background:linear-gradient(135deg,var(--teal),#0f6e56);">T</div>
       <div class="user-info">
-        <div class="user-name" id="user-name">Ahmed M.</div>
+        <div class="user-name" id="user-name">Test</div>
         <div class="user-role" id="user-role">Super Admin</div>
       </div>
     </div>
@@ -1988,6 +1988,15 @@ const pageTitles = {
   certificates: ['Certificates', 'Badge and certificate design'],
   users: ['Staff users', 'Admin access management'],
   settings: ['Settings', 'Room and system configuration'],
+  'dev-templates': ['Game Templates', 'Build engines — content team uses forever'],
+  'dev-builder': ['Template Builder', 'Write the game engine code'],
+  'dev-api': ['API Explorer', 'All endpoints + live tester'],
+  'dev-components': ['Components', 'Reusable UI library'],
+  'dev-hooks': ['Game Hooks', 'cyberRoom SDK reference'],
+  'dev-preview': ['Live Preview', 'Test any activity on any device'],
+  'dev-screens': ['Room Screens', 'Physical screen registry'],
+  'dev-deploy': ['Deployment', 'Deploy to room server'],
+  'dev-logs': ['Logs', 'Errors, warnings, info'],
 };
 
 const topbarActions = {
@@ -2000,7 +2009,21 @@ const topbarActions = {
 };
 
 function nav(page) {
-  // defined in mobile sidebar section — this is a no-op placeholder replaced at runtime
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const pageEl = document.getElementById('page-' + page);
+  if (pageEl) pageEl.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') === `nav('${page}')`) n.classList.add('active');
+  });
+  const [title, sub] = pageTitles[page] || [page, ''];
+  document.getElementById('topbar-title').textContent = title;
+  document.getElementById('topbar-sub').textContent = sub ? '/ ' + sub : '';
+  document.getElementById('topbar-actions').innerHTML = topbarActions[page] || '';
+  // close sidebar on mobile after navigation
+  if (window.innerWidth <= 768) closeSidebar();
+  // trigger dev page renders on demand
+  if (typeof _devRenders !== 'undefined' && _devRenders[page]) _devRenders[page]();
 }
 
 // ===== MODAL =====
@@ -2696,23 +2719,6 @@ function closeSidebar() {
   document.body.style.overflow = '';
 }
 
-// Close sidebar on nav click (mobile)
-function nav(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const pageEl = document.getElementById('page-' + page);
-  if (pageEl) pageEl.classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => {
-    if (n.getAttribute('onclick') === `nav('${page}')`) n.classList.add('active');
-  });
-  const [title, sub] = pageTitles[page] || [page, ''];
-  document.getElementById('topbar-title').textContent = title;
-  document.getElementById('topbar-sub').textContent = sub ? '/ ' + sub : '';
-  document.getElementById('topbar-actions').innerHTML = topbarActions[page] || '';
-  // Auto-close sidebar on mobile after nav
-  if (window.innerWidth <= 768) closeSidebar();
-}
-
 // ===== BOTTOM NAV =====
 function bottomNav(page, btn) {
   document.querySelectorAll('.bottom-nav-item').forEach(b => b.classList.remove('active'));
@@ -2720,7 +2726,7 @@ function bottomNav(page, btn) {
   nav(page);
 }
 
-// Swipe to open/close sidebar
+// Swipe right from left edge to open, swipe left to close
 let touchStartX = 0;
 document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
 document.addEventListener('touchend', e => {
@@ -2743,6 +2749,8 @@ function switchRole(role) {
   document.getElementById('role-dev').style.color = role === 'dev' ? 'white' : 'var(--text2)';
   document.getElementById('user-avatar').style.background = role === 'dev'
     ? 'linear-gradient(135deg,#a371f7,#7c3aed)' : 'linear-gradient(135deg,var(--teal),#0f6e56)';
+  document.getElementById('user-avatar').textContent = role === 'dev' ? 'T' : 'T';
+  document.getElementById('user-name').textContent = 'Test';
   document.getElementById('user-role').textContent = role === 'dev' ? 'Developer' : 'Super Admin';
   if (role === 'dev') {
     nav('dev-templates');
@@ -3258,13 +3266,6 @@ const _devRenders = {
   'dev-logs': renderLogs,
   'dev-builder': () => { renderTemplateChecklist(); updateBuilderPreview(); },
   'dev-preview': populatePreviewSelect,
-};
-
-// Patch nav to also trigger dev renders
-const _baseMobileNav = nav;
-window.nav = function(page) {
-  _baseMobileNav(page);
-  if (_devRenders[page]) _devRenders[page]();
 };
 </script>
 </body>
